@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CollectionCardService } from './collection_card.service';
 import { CreateCollectionCardDto } from './dto/create-collection_card.dto';
 import { UpdateCollectionCardDto } from './dto/update-collection_card.dto';
@@ -23,7 +31,10 @@ export class CollectionCardController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCollectionCardDto: UpdateCollectionCardDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateCollectionCardDto: UpdateCollectionCardDto,
+  ) {
     return this.collectionCardService.update(+id, updateCollectionCardDto);
   }
 

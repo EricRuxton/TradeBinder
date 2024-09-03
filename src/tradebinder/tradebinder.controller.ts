@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { TradebinderService } from './tradebinder.service';
 import { CreateTradebinderDto } from './dto/create-tradebinder.dto';
 import { UpdateTradebinderDto } from './dto/update-tradebinder.dto';
@@ -23,7 +31,10 @@ export class TradebinderController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTradebinderDto: UpdateTradebinderDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateTradebinderDto: UpdateTradebinderDto,
+  ) {
     return this.tradebinderService.update(+id, updateTradebinderDto);
   }
 

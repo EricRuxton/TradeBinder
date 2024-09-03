@@ -9,7 +9,9 @@ describe('TradebinderCollectionCardService', () => {
       providers: [TradebinderCollectionCardService],
     }).compile();
 
-    service = module.get<TradebinderCollectionCardService>(TradebinderCollectionCardService);
+    service = module.get<TradebinderCollectionCardService>(
+      TradebinderCollectionCardService,
+    );
   });
 
   it('should be defined', () => {

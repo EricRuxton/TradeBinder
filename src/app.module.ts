@@ -9,7 +9,14 @@ import { TradebinderModule } from './tradebinder/tradebinder.module';
 import { TradebinderCollectionCardModule } from './tradebinder_collection_card/tradebinder_collection_card.module';
 
 @Module({
-  imports: [UserModule, CardModule, CollectionModule, CollectionCardModule, TradebinderModule, TradebinderCollectionCardModule],
+  imports: [
+    UserModule,
+    CardModule,
+    CollectionModule,
+    CollectionCardModule,
+    TradebinderModule,
+    TradebinderCollectionCardModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

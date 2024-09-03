@@ -11,7 +11,9 @@ describe('TradebinderCollectionCardController', () => {
       providers: [TradebinderCollectionCardService],
     }).compile();
 
-    controller = module.get<TradebinderCollectionCardController>(TradebinderCollectionCardController);
+    controller = module.get<TradebinderCollectionCardController>(
+      TradebinderCollectionCardController,
+    );
   });
 
   it('should be defined', () => {

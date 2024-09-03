@@ -4,7 +4,9 @@ import { UpdateTradebinderCollectionCardDto } from './dto/update-tradebinder_col
 
 @Injectable()
 export class TradebinderCollectionCardService {
-  create(createTradebinderCollectionCardDto: CreateTradebinderCollectionCardDto) {
+  create(
+    createTradebinderCollectionCardDto: CreateTradebinderCollectionCardDto,
+  ) {
     return 'This action adds a new tradebinderCollectionCard';
   }
 
@@ -16,7 +18,10 @@ export class TradebinderCollectionCardService {
     return `This action returns a #${id} tradebinderCollectionCard`;
   }
 
-  update(id: number, updateTradebinderCollectionCardDto: UpdateTradebinderCollectionCardDto) {
+  update(
+    id: number,
+    updateTradebinderCollectionCardDto: UpdateTradebinderCollectionCardDto,
+  ) {
     return `This action updates a #${id} tradebinderCollectionCard`;
   }
 
