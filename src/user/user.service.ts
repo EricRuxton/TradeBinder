@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcrypt';
+
+//CONSTANTS
+const ROUNDS = 10;
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
+    const hash = await bcrypt.hash(createUserDto.password, ROUNDS);
     return 'This action adds a new user';
   }
 
