@@ -42,7 +42,6 @@ lerna-debug.log*
 .env.production.local
 .env.local
 config.json
-ormconfig.json
 
 # temp directory
 .temp

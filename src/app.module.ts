@@ -6,7 +6,8 @@ import { CardModule } from './card/card.module';
 import { CollectionModule } from './collection/collection.module';
 import { CollectionCardModule } from './collection_card/collection_card.module';
 import { TradebinderModule } from './tradebinder/tradebinder.module';
-import { TradebinderCollectionCardModule } from './tradebinder_collection_card/tradebinder_collection_card.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import 'dotenv/config';
 
 @Module({
   imports: [
@@ -15,7 +16,17 @@ import { TradebinderCollectionCardModule } from './tradebinder_collection_card/t
     CollectionModule,
     CollectionCardModule,
     TradebinderModule,
-    TradebinderCollectionCardModule,
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DB_HOST,
+      port: parseInt(process.env.DB_PORT),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      database: process.env.DB_NAME,
+      autoLoadEntities: true,
+      synchronize: true,
+      logging: true,
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
