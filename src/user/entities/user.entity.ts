@@ -10,14 +10,17 @@ export class User {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
+
+  @Column({ unique: true })
+  username: string;
 
   @Column()
   password: string;
 
   @Column()
-  hash: string;
+  salt: string;
 
   @CreateDateColumn()
   createdDate: Date;
