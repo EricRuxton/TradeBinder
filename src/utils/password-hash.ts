@@ -9,10 +9,6 @@ export const generatePassword = async (pwd: string) => {
   };
 };
 
-export const generateSSN = async (SSN: string, salt: string) => {
-  return await bcrypt.hash(SSN, salt);
-};
-
 export const hashPassword = async (pwd: string, salt: string) => {
   return await bcrypt.hash(pwd, salt);
 };

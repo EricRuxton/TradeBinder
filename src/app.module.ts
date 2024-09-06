@@ -7,6 +7,7 @@ import { CollectionModule } from './collection/collection.module';
 import { CollectionCardModule } from './collection_card/collection_card.module';
 import { TradebinderModule } from './tradebinder/tradebinder.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
 import 'dotenv/config';
 
 @Module({
@@ -26,6 +27,7 @@ import 'dotenv/config';
       entities: ['dist/**/*.entity.js'],
       synchronize: true,
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
