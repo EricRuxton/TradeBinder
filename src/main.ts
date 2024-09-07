@@ -6,6 +6,8 @@ import { ValidationPipe } from '@nestjs/common';
 //converting to import causes the transporter to break
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const nodemailer = require('nodemailer');
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const hbs = require('nodemailer-express-handlebars');
 
 export const transporter = nodemailer.createTransport({
   host: 'smtp.ethereal.email',
@@ -15,6 +17,15 @@ export const transporter = nodemailer.createTransport({
     pass: process.env.SMTP_PASS,
   },
 });
+
+const hbsOptions = {
+  viewEngine: {
+    defaultLayout: false,
+  },
+  viewPath: 'mail_templates/handlebars',
+};
+
+transporter.use('compile', hbs(hbsOptions));
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });

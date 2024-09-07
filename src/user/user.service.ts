@@ -18,22 +18,22 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
+    const token = uuidv4();
     try {
       const { hash, salt } = await generatePassword(createUserDto.password);
 
-      const user = await this.userRepository.save({
+      await this.userRepository.save({
         ...createUserDto,
         salt,
         password: hash,
-        verificationCode: uuidv4,
+        token: token,
       });
-
-      await transporter.sendMail(OnboardingOptions(createUserDto.email));
-
-      return this.findOne(user.username);
     } catch (e) {
       throw new BadRequestException(e.message);
     }
+    await transporter.sendMail(OnboardingOptions(createUserDto.email, token));
+
+    return this.findOne(createUserDto.username);
   }
 
   findAll() {
