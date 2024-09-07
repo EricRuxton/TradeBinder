@@ -9,6 +9,8 @@ import { hashPassword } from '../utils/password-hash';
 import { SignInDto } from './dto/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/entities/user.entity';
+import { TradebinderService } from '../tradebinder/tradebinder.service';
+import { CollectionService } from '../collection/collection.service';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +18,8 @@ export class AuthService {
 
   constructor(
     private userService: UserService,
+    private tradebinderService: TradebinderService,
+    private collectionService: CollectionService,
     private jwtService: JwtService,
   ) {
     if (!AuthService.singleton) AuthService.singleton = this;
@@ -57,9 +61,15 @@ export class AuthService {
     if (!user || user.token !== token) {
       throw new BadRequestException('Bad Token');
     }
-    await this.userService.update(user.id, {
-      verified: true,
-    });
+    if (!user.verified) {
+      const collection = await this.collectionService.create({ user });
+      const tradebinder = await this.tradebinderService.create({ user });
+      await this.userService.update(user.id, {
+        verified: true,
+        collection,
+        tradebinder,
+      });
+    }
 
     return this.signJwt(user);
   }

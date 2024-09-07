@@ -26,6 +26,7 @@ import 'dotenv/config';
       database: process.env.DB_NAME,
       entities: ['dist/**/*.entity.js'],
       synchronize: true,
+      autoLoadEntities: true,
     }),
     AuthModule,
   ],

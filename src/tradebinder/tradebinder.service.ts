@@ -1,11 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTradebinderDto } from './dto/create-tradebinder.dto';
 import { UpdateTradebinderDto } from './dto/update-tradebinder.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Tradebinder } from './entities/tradebinder.entity';
 
 @Injectable()
 export class TradebinderService {
+  constructor(
+    @InjectRepository(Tradebinder)
+    private tradebinderRepository: Repository<Tradebinder>,
+  ) {}
+
   create(createTradebinderDto: CreateTradebinderDto) {
-    return 'This action adds a new tradebinder';
+    return this.tradebinderRepository.save(createTradebinderDto);
   }
 
   findAll() {

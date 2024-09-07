@@ -2,8 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Collection } from '../../collection/entities/collection.entity';
+import { Tradebinder } from '../../tradebinder/entities/tradebinder.entity';
 
 @Entity()
 export class User {
@@ -25,6 +29,9 @@ export class User {
   @Column()
   token: string;
 
+  @Column({ default: null })
+  tokenExpiry: Date;
+
   @Column({ default: false })
   verified: boolean;
 
@@ -33,4 +40,12 @@ export class User {
 
   @CreateDateColumn()
   createdDate: Date;
+
+  @OneToOne(() => Collection)
+  @JoinColumn()
+  collection: Collection;
+
+  @OneToOne(() => Tradebinder)
+  @JoinColumn()
+  tradebinder: Tradebinder;
 }

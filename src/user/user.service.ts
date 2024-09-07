@@ -48,8 +48,11 @@ export class UserService {
   }
 
   async findOneById(id: number) {
-    return await this.userRepository.findOneByOrFail({
-      id,
+    return await this.userRepository.findOneOrFail({
+      where: { id },
+      relations: {
+        collection: true,
+      },
     });
   }
 
