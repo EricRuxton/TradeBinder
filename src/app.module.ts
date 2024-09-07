@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { CardModule } from './card/card.module';
 import { CollectionModule } from './collection/collection.module';
-import { CollectionCardModule } from './collection_card/collection_card.module';
 import { TradebinderModule } from './tradebinder/tradebinder.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
@@ -15,7 +14,6 @@ import 'dotenv/config';
     UserModule,
     CardModule,
     CollectionModule,
-    CollectionCardModule,
     TradebinderModule,
     TypeOrmModule.forRoot({
       type: 'mysql',

@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateCollectionDto } from './dto/create-collection.dto';
-import { UpdateCollectionDto } from './dto/update-collection.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Collection } from './entities/collection.entity';
@@ -16,19 +15,33 @@ export class CollectionService {
     return this.collectionRepository.save(createCollectionDto);
   }
 
-  findAll() {
-    return `This action returns all collection`;
+  find(id: number) {
+    return this.collectionRepository.findOne({
+      relations: {
+        user: true,
+        collectionCards: {
+          card: true,
+        },
+      },
+      where: { user: { id } },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} collection`;
-  }
-
-  update(id: number, updateCollectionDto: UpdateCollectionDto) {
-    return `This action updates a #${id} collection`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} collection`;
+  async findOne(username: string) {
+    const collection = await this.collectionRepository.findOne({
+      relations: {
+        user: true,
+        collectionCards: {
+          card: true,
+        },
+      },
+      where: {
+        user: { username },
+      },
+    });
+    if (!collection.public) {
+      throw new UnauthorizedException('This collection is private');
+    }
+    return collection;
   }
 }

@@ -1,45 +1,24 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { CollectionService } from './collection.service';
-import { CreateCollectionDto } from './dto/create-collection.dto';
-import { UpdateCollectionDto } from './dto/update-collection.dto';
+import { AuthGuard } from '../auth/auth.guard';
+import { UserDecorator } from '../user/user.decorator';
+import { User } from '../user/entities/user.entity';
 
 @Controller('collection')
 export class CollectionController {
   constructor(private readonly collectionService: CollectionService) {}
 
-  @Post()
-  create(@Body() createCollectionDto: CreateCollectionDto) {
-    return this.collectionService.create(createCollectionDto);
-  }
-
+  //Gets the signed in users collections
+  @UseGuards(AuthGuard)
   @Get()
-  findAll() {
-    return this.collectionService.findAll();
+  find(@UserDecorator() user: User) {
+    return this.collectionService.find(+user.id);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.collectionService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateCollectionDto: UpdateCollectionDto,
-  ) {
-    return this.collectionService.update(+id, updateCollectionDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.collectionService.remove(+id);
+  //gets the collection belonging to the username param
+  @UseGuards(AuthGuard)
+  @Get(':username')
+  findOne(@Param('username') username: string) {
+    return this.collectionService.findOne(username);
   }
 }
