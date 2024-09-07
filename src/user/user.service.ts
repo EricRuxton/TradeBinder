@@ -5,9 +5,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import 'dotenv/config';
-import { OnboardingTemplate } from '../../mail_templates/templates';
+import { OnboardingOptions } from '../../mail_templates/mail_options';
 import { transporter } from '../main';
 import { generatePassword } from '../utils/password-hash';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UserService {
@@ -24,11 +25,12 @@ export class UserService {
         ...createUserDto,
         salt,
         password: hash,
+        verificationCode: uuidv4,
       });
 
-      await transporter.sendMail(OnboardingTemplate(createUserDto.email));
+      await transporter.sendMail(OnboardingOptions(createUserDto.email));
 
-      return user;
+      return this.findOne(user.username);
     } catch (e) {
       throw new BadRequestException(e.message);
     }
@@ -44,11 +46,34 @@ export class UserService {
     });
   }
 
+  async findOneById(id: number) {
+    return await this.userRepository.findOneBy({
+      id,
+    });
+  }
+
+  async findProfile(username: string) {
+    return await this.userRepository.findOne({
+      where: {
+        username,
+      },
+      select: ['username', 'salt', 'password'],
+    });
+  }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  async verify(id: number, token: string) {
+    const user = await this.findOneById(id);
+    if (!user || user.token !== token) {
+      throw new BadRequestException('Bad Token');
+    }
+    return await this.userRepository.save({ ...user, verified: true });
   }
 }

@@ -8,7 +8,7 @@ import {
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({ unique: true })
   email: string;
@@ -21,6 +21,15 @@ export class User {
 
   @Column({ select: false })
   salt: string;
+
+  @Column()
+  token: string;
+
+  @Column({ default: false })
+  verified: boolean;
+
+  @Column({ default: false })
+  locked: boolean;
 
   @CreateDateColumn()
   createdDate: Date;
