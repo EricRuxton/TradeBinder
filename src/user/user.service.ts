@@ -31,9 +31,10 @@ export class UserService {
     } catch (e) {
       throw new BadRequestException(e.message);
     }
-    await transporter.sendMail(OnboardingOptions(createUserDto.email, token));
+    const user = await this.findOne(createUserDto.username);
+    await transporter.sendMail(OnboardingOptions(user.email, user.id, token));
 
-    return this.findOne(createUserDto.username);
+    return user;
   }
 
   findAll() {
@@ -41,39 +42,27 @@ export class UserService {
   }
 
   async findOne(username: string) {
-    return await this.userRepository.findOneBy({
+    return await this.userRepository.findOneByOrFail({
       username,
     });
   }
 
   async findOneById(id: number) {
-    return await this.userRepository.findOneBy({
+    return await this.userRepository.findOneByOrFail({
       id,
     });
   }
 
-  async findProfile(username: string) {
+  async findSensitiveUser(username: string) {
     return await this.userRepository.findOne({
       where: {
         username,
       },
-      select: ['username', 'salt', 'password'],
+      select: ['username', 'salt', 'password', 'verified', 'locked'],
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
-
-  async verify(id: number, token: string) {
-    const user = await this.findOneById(id);
-    if (!user || user.token !== token) {
-      throw new BadRequestException('Bad Token');
-    }
-    return await this.userRepository.save({ ...user, verified: true });
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    return this.userRepository.save({ ...updateUserDto, id });
   }
 }

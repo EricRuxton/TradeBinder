@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -7,6 +8,7 @@ import { UserService } from '../user/user.service';
 import { hashPassword } from '../utils/password-hash';
 import { SignInDto } from './dto/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -20,14 +22,15 @@ export class AuthService {
   }
 
   async signIn(signInDto: SignInDto): Promise<any> {
-    const user = await this.userService.findProfile(signInDto.username);
-    if (user.password !== (await hashPassword(signInDto.password, user.salt))) {
+    const user = await this.userService.findSensitiveUser(signInDto.username);
+    if (
+      !user.verified ||
+      user.locked ||
+      user.password !== (await hashPassword(signInDto.password, user.salt))
+    ) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.id, username: user.username };
-    return {
-      access_token: await this.jwtService.signAsync(payload),
-    };
+    return await this.signJwt(user);
   }
 
   async getUserFromToken(token: string) {
@@ -39,17 +42,36 @@ export class AuthService {
         unwrappedToken = token;
       }
       const parsed = this.jwtService.verify(unwrappedToken);
-      const user = await this.userService.findOne(parsed.sub);
+      const user = await this.userService.findOne(parsed.username);
       if (!user)
         throw new NotFoundException('Could not get user from this token');
 
-      if (user.verified && !user.locked) {
-        return user;
-      } else {
-        throw new UnauthorizedException();
-      }
+      return user;
     } catch (err) {
       throw new UnauthorizedException(err);
     }
+  }
+
+  async verify(id: number, token: string) {
+    const user = await this.userService.findOneById(id);
+    if (!user || user.token !== token) {
+      throw new BadRequestException('Bad Token');
+    }
+    await this.userService.update(user.id, {
+      verified: true,
+    });
+
+    return this.signJwt(user);
+  }
+
+  private async signJwt(user: User) {
+    const payload = {
+      sub: user.id,
+      userId: user.id,
+      username: user.username,
+    };
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
   }
 }

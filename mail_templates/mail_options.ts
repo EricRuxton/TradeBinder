@@ -1,11 +1,11 @@
 import 'dotenv/config';
 
-export const OnboardingOptions = (email, token) => {
+export const OnboardingOptions = (email, id, token) => {
   return {
-    from: `"Trade Binder" <${process.env.SMTP_USER}>`, // sender address
-    to: email, // list of receivers
-    subject: 'Account Confirmation', // Subject line
+    from: `"Trade Binder" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: 'Account Confirmation',
     template: 'onboarding_email',
-    context: { token },
+    context: { id, token },
   };
 };

@@ -19,7 +19,8 @@ export const UserDecorator = createParamDecorator(
     const bearerToken = authHeader.split(' ')[1];
     const authService = AuthService.singleton;
     const user = await authService.getUserFromToken(bearerToken);
-    if (!user) throw new UnauthorizedException();
+    if (!user || !user.verified || user.locked)
+      throw new UnauthorizedException();
     return user;
   },
 );
