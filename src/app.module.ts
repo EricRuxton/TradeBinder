@@ -8,6 +8,7 @@ import { TradebinderModule } from './tradebinder/tradebinder.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import 'dotenv/config';
+import { CollectionCardModule } from './collection_card/collection_card.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import 'dotenv/config';
     CardModule,
     CollectionModule,
     TradebinderModule,
+    CollectionCardModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,

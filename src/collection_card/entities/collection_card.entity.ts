@@ -15,4 +15,13 @@ export class CollectionCard {
 
   @Column({ default: true })
   tradeable: boolean;
+
+  @Column()
+  foil: boolean;
+
+  constructor(collection: Collection, card: Card, foil: boolean) {
+    this.collection = collection;
+    this.card = card;
+    this.foil = foil;
+  }
 }

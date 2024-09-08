@@ -1,1 +1,9 @@
-export class CreateCollectionCardDto {}
+import { IsNotEmpty } from 'class-validator';
+
+export class CreateCollectionCardDto {
+  @IsNotEmpty()
+  scryfallId: string;
+
+  @IsNotEmpty()
+  foil: boolean;
+}

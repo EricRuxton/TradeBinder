@@ -30,7 +30,21 @@ export class Card {
       },
     },
   })
-  value: number;
+  flatValue: number;
+
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    transformer: {
+      to(value) {
+        return value;
+      },
+      from(value) {
+        return parseFloat(value);
+      },
+    },
+  })
+  foilValue: number;
 
   @Column()
   color: string;
@@ -43,4 +57,26 @@ export class Card {
 
   @OneToMany(() => CollectionCard, (collectionCard) => collectionCard.card)
   collectionCards: CollectionCard[];
+
+  constructor(
+    setName,
+    colorIdentity,
+    flatValue,
+    color,
+    name,
+    cardType,
+    cmc,
+    scryfallId,
+    foilValue,
+  ) {
+    this.setName = setName;
+    this.colorIdentity = colorIdentity;
+    this.flatValue = flatValue;
+    this.color = color;
+    this.name = name;
+    this.cardType = cardType;
+    this.cmc = cmc;
+    this.scryfallId = scryfallId;
+    this.foilValue = foilValue;
+  }
 }
