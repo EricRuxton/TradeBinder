@@ -37,6 +37,8 @@ export class CardService {
       scryfallCardDto.image_uris.art_crop,
       scryfallCardDto.set,
       scryfallCardDto.finishes.toString(),
+      scryfallCardDto.lang,
+      scryfallCardDto.collector_number,
     );
   }
 
@@ -59,18 +61,24 @@ export class CardService {
   }
 
   async parseBatch(mtgoLineItems: MtgoLineitemDto[]) {
-    const tbCards: Card[] = [];
+    const res = [];
     for (const mtgLineItem of mtgoLineItems) {
       const scryfallResponse: ScryfallCardDto[] =
         await this.scryfallService.findAllByName(mtgLineItem.name);
+      const tbCards: Card[] = [];
       for (const scryfallCard of scryfallResponse) {
         tbCards.push(await this.scryfallCardTransformer(scryfallCard));
       }
+      res.push({
+        qty: mtgLineItem.qty,
+        [mtgLineItem.name]: tbCards.sort((a, b) => {
+          return a.setName > b.setName ? 1 : -1;
+        }),
+      });
       //scryfall advises 50-100ms for rate limiting
       await delay(200);
       //scryfallCards.push(...scryfallResponse.data);
     }
-    console.log(tbCards);
-    return tbCards;
+    return res;
   }
 }

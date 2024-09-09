@@ -18,6 +18,8 @@ export class ScryfallService {
   }
 
   async findAllByName(name: string): Promise<ScryfallCardDto[]> {
+    //return only english cards because scryfall only supports prices for
+    //english prints
     const response = await axios.get(
       `https://api.scryfall.com/cards/search?q="${name}"&unique=prints`,
       {

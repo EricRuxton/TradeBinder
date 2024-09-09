@@ -68,6 +68,12 @@ export class Card {
   @Column()
   finishes: string;
 
+  @Column()
+  language: string;
+
+  @Column()
+  collectorNumber: string;
+
   @OneToMany(() => CollectionCard, (collectionCard) => collectionCard.card)
   collectionCards: CollectionCard[];
 
@@ -85,6 +91,8 @@ export class Card {
     artUri,
     setCode,
     finishes,
+    language,
+    collectorNumber,
   ) {
     this.setName = setName;
     this.colorIdentity = colorIdentity;
@@ -99,5 +107,7 @@ export class Card {
     this.artUri = artUri;
     this.setCode = setCode;
     this.finishes = finishes;
+    this.language = language;
+    this.collectorNumber = collectorNumber;
   }
 }
