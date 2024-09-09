@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -39,9 +43,9 @@ export class CollectionService {
         user: { username },
       },
     });
-    if (!collection.public) {
+    if (!collection) throw new BadRequestException('Collection not found');
+    if (!collection.public)
       throw new UnauthorizedException('This collection is private');
-    }
     return collection;
   }
 }

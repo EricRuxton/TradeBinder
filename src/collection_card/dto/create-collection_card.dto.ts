@@ -6,4 +6,7 @@ export class CreateCollectionCardDto {
 
   @IsNotEmpty()
   foil: boolean;
+
+  @IsNotEmpty()
+  tradeable: boolean;
 }

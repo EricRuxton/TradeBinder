@@ -18,6 +18,9 @@ export class Card {
   @Column()
   setName: string;
 
+  @Column()
+  setCode: string;
+
   @Column('decimal', {
     precision: 10,
     scale: 2,
@@ -33,6 +36,7 @@ export class Card {
   flatValue: number;
 
   @Column('decimal', {
+    nullable: true,
     precision: 10,
     scale: 2,
     transformer: {
@@ -44,7 +48,7 @@ export class Card {
       },
     },
   })
-  foilValue: number;
+  foilValue?: number;
 
   @Column()
   color: string;
@@ -54,6 +58,15 @@ export class Card {
 
   @Column()
   cmc: number;
+
+  @Column()
+  cardUri: string;
+
+  @Column()
+  artUri: string;
+
+  @Column()
+  finishes: string;
 
   @OneToMany(() => CollectionCard, (collectionCard) => collectionCard.card)
   collectionCards: CollectionCard[];
@@ -68,6 +81,10 @@ export class Card {
     cmc,
     scryfallId,
     foilValue,
+    cardUri,
+    artUri,
+    setCode,
+    finishes,
   ) {
     this.setName = setName;
     this.colorIdentity = colorIdentity;
@@ -78,5 +95,9 @@ export class Card {
     this.cmc = cmc;
     this.scryfallId = scryfallId;
     this.foilValue = foilValue;
+    this.cardUri = cardUri;
+    this.artUri = artUri;
+    this.setCode = setCode;
+    this.finishes = finishes;
   }
 }

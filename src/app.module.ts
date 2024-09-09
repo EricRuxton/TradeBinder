@@ -9,6 +9,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import 'dotenv/config';
 import { CollectionCardModule } from './collection_card/collection_card.module';
+import { ScryfallService } from './scryfall/scryfall.service';
+import { ScryfallModule } from './scryfall/scryfall.module';
 
 @Module({
   imports: [
@@ -29,8 +31,9 @@ import { CollectionCardModule } from './collection_card/collection_card.module';
       autoLoadEntities: true,
     }),
     AuthModule,
+    ScryfallModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ScryfallService],
 })
 export class AppModule {}
