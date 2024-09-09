@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthGuard } from '../auth/auth.guard';
-import { UserDecorator } from './user.decorator';
+import { UserInject } from './userInject';
 import { User } from './entities/user.entity';
 
 @Controller('user')
@@ -16,7 +16,7 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get('profile')
-  findOne(@UserDecorator() user: User) {
+  findOne(@UserInject() user: User) {
     return user;
   }
 

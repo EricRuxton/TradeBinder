@@ -1,15 +1,19 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
 } from '@nestjs/common';
 import { TradebinderService } from './tradebinder.service';
 import { CreateTradebinderDto } from './dto/create-tradebinder.dto';
 import { UpdateTradebinderDto } from './dto/update-tradebinder.dto';
+import { AuthGuard } from '../auth/auth.guard';
+import { UserInject } from '../user/userInject';
+import { User } from '../user/entities/user.entity';
 
 @Controller('tradebinder')
 export class TradebinderController {
@@ -20,14 +24,10 @@ export class TradebinderController {
     return this.tradebinderService.create(createTradebinderDto);
   }
 
+  @UseGuards(AuthGuard)
   @Get()
-  findAll() {
-    return this.tradebinderService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tradebinderService.findOne(+id);
+  find(@UserInject() user: User) {
+    return this.tradebinderService.findOne(user.id);
   }
 
   @Patch(':id')

@@ -10,7 +10,7 @@ import {
 import { CollectionCardService } from './collection_card.service';
 import { CreateCollectionCardDto } from './dto/create-collection_card.dto';
 import { UpdateCollectionCardDto } from './dto/update-collection_card.dto';
-import { UserDecorator } from '../user/user.decorator';
+import { UserInject } from '../user/userInject';
 import { User } from '../user/entities/user.entity';
 import { AuthGuard } from '../auth/auth.guard';
 
@@ -20,12 +20,12 @@ export class CollectionCardController {
 
   //adds a card to a users collection by its scryfallId
   //if a card does not already exist within the db with that id
-  //scrap scryfall for that card
+  //scrape scryfall for that card
   @UseGuards(AuthGuard)
   @Post()
   create(
     @Body() createCollectionCards: CreateCollectionCardDto[],
-    @UserDecorator() user: User,
+    @UserInject() user: User,
   ) {
     return this.collectionCardService.create(createCollectionCards, user);
   }
@@ -40,7 +40,7 @@ export class CollectionCardController {
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@UserDecorator() user: User, @Param('id') id: string) {
+  remove(@UserInject() user: User, @Param('id') id: string) {
     return this.collectionCardService.remove(+id, user.id);
   }
 }

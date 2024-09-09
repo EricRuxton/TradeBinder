@@ -11,7 +11,7 @@ import {
 import { CardService } from './card.service';
 import { UpdateCardDto } from './dto/update-card.dto';
 import { AuthGuard } from '../auth/auth.guard';
-import { MtgoLineitemDto } from './dto/mtgo-lineitem.dto';
+import { MtgoLineItemDto } from './dto/mtgo-line-item.dto';
 
 @Controller('card')
 export class CardController {
@@ -24,7 +24,7 @@ export class CardController {
 
   @UseGuards(AuthGuard)
   @Post('batch')
-  batchImport(@Body() mtgoLineItems: MtgoLineitemDto[]) {
+  batchImport(@Body() mtgoLineItems: MtgoLineItemDto[]) {
     return this.cardService.parseBatch(mtgoLineItems);
   }
 

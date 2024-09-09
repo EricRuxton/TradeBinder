@@ -19,6 +19,8 @@ export class CollectionCard {
   @Column()
   foil: boolean;
 
+  value: number;
+
   constructor(
     collection: Collection,
     card: Card,

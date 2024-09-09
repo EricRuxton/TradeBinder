@@ -3,8 +3,8 @@ import { UpdateCardDto } from './dto/update-card.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Card } from './entities/card.entity';
-import { ScryfallCardDto } from './dto/scryfall-card.dto';
-import { MtgoLineitemDto } from './dto/mtgo-lineitem.dto';
+import { ScryfallCardDto } from '../scryfall/dto/scryfall-card.dto';
+import { MtgoLineItemDto } from './dto/mtgo-line-item.dto';
 import { ScryfallService } from '../scryfall/scryfall.service';
 import { delay } from '../utils/utils';
 
@@ -60,7 +60,7 @@ export class CardService {
     return `This action removes a #${id} card`;
   }
 
-  async parseBatch(mtgoLineItems: MtgoLineitemDto[]) {
+  async parseBatch(mtgoLineItems: MtgoLineItemDto[]) {
     const res = [];
     for (const mtgLineItem of mtgoLineItems) {
       const scryfallResponse: ScryfallCardDto[] =

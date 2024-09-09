@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { hashPassword } from '../utils/password-hash';
+import { validatePassword } from '../utils/password-hash';
 import { SignInDto } from './dto/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/entities/user.entity';
@@ -30,7 +30,7 @@ export class AuthService {
     if (
       !user.verified ||
       user.locked ||
-      user.password !== (await hashPassword(signInDto.password, user.salt))
+      !(await validatePassword(signInDto.password, user.salt, user.password))
     ) {
       throw new UnauthorizedException();
     }

@@ -7,7 +7,7 @@ import {
 import { Request } from 'express';
 import { AuthService } from '../auth/auth.service';
 
-export const UserDecorator = createParamDecorator(
+export const UserInject = createParamDecorator(
   async (data: unknown, ctx: ExecutionContext) => {
     const req: Request = ctx.switchToHttp().getRequest();
     const authHeader = req.headers['authorization'];

@@ -7,9 +7,9 @@ import { CreateCollectionCardDto } from './dto/create-collection_card.dto';
 import { UpdateCollectionCardDto } from './dto/update-collection_card.dto';
 import { CardService } from '../card/card.service';
 import { Card } from '../card/entities/card.entity';
-import { ScryfallCardDto } from '../card/dto/scryfall-card.dto';
+import { ScryfallCardDto } from '../scryfall/dto/scryfall-card.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 import { CollectionCard } from './entities/collection_card.entity';
 import { User } from '../user/entities/user.entity';
 import { CollectionService } from '../collection/collection.service';
@@ -97,5 +97,34 @@ export class CollectionCardService {
         'This card does not exist within your collection',
       );
     return await this.collectionCardRepository.delete(id);
+  }
+
+  async findTradeBinderCards(collectionId: number, threshold: number) {
+    return this.collectionCardRepository.find({
+      where: [
+        {
+          tradeable: true,
+          collection: {
+            id: collectionId,
+          },
+          card: {
+            foilValue: MoreThanOrEqual(threshold),
+          },
+        },
+        {
+          tradeable: true,
+          collection: {
+            id: collectionId,
+          },
+          card: {
+            flatValue: MoreThanOrEqual(threshold),
+          },
+        },
+      ],
+      relations: {
+        collection: true,
+        card: true,
+      },
+    });
   }
 }

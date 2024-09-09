@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ScryfallCardDto } from '../card/dto/scryfall-card.dto';
+import { ScryfallCardDto } from './dto/scryfall-card.dto';
 import axios from 'axios';
 
 @Injectable()

@@ -16,5 +16,6 @@ import { ScryfallModule } from '../scryfall/scryfall.module';
   ],
   controllers: [CollectionCardController],
   providers: [CollectionCardService],
+  exports: [CollectionCardService],
 })
 export class CollectionCardModule {}
