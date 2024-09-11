@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateCardDto } from './dto/update-card.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Card } from './entities/card.entity';
@@ -51,14 +50,6 @@ export class CardService {
         scryfallId,
       },
     });
-  }
-
-  update(id: number, updateCardDto: UpdateCardDto) {
-    return `This action updates a #${id} card`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} card`;
   }
 
   async parseBatch(mtgoLineItems: MtgoLineItemDto[]) {

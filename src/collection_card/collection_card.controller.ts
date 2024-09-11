@@ -38,6 +38,7 @@ export class CollectionCardController {
     return this.collectionCardService.create(createCollectionCards, user);
   }
 
+  //gets all cards in the signed-in users collection, filtered
   @UseGuards(AuthGuard)
   @Get('collection')
   getAuthCollection(
@@ -55,6 +56,7 @@ export class CollectionCardController {
     });
   }
 
+  //gets all cards in the passed users collection if it is public, filtered
   @Get('collection/:username')
   async getCollection(
     @Param('username') username: string,
@@ -74,6 +76,7 @@ export class CollectionCardController {
     });
   }
 
+  //gets all cards in the signed-in users tradebinder, filtered
   @UseGuards(AuthGuard)
   @Get('tradebinder/:username')
   async getAuthTradebinder(
@@ -93,6 +96,7 @@ export class CollectionCardController {
     });
   }
 
+  //gets all cards in the passed users tradebinder if it is public, filtered
   @Get('tradebinder/:username')
   async getTradebinder(
     @Param('username') username: string,
@@ -117,6 +121,7 @@ export class CollectionCardController {
     });
   }
 
+  //removes a card from the signed-in users collection
   @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@UserInject() user: User, @Param('id') id: string) {

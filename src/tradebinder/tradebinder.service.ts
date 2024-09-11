@@ -57,10 +57,6 @@ export class TradebinderService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tradebinder`;
-  }
-
   async findInfo(tradebinder: Tradebinder) {
     const collectionCards = await this.collectionCardService.findFiltered(
       tradebinder.user.collection.id,

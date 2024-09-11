@@ -1,15 +1,5 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { CardService } from './card.service';
-import { UpdateCardDto } from './dto/update-card.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { MtgoLineItemDto } from './dto/mtgo-line-item.dto';
 
@@ -22,24 +12,17 @@ export class CardController {
     return this.cardService.findAll();
   }
 
+  //takes a list of mtg card names and returns all
+  //scryfall objects with the same name
   @UseGuards(AuthGuard)
   @Post('batch')
   batchImport(@Body() mtgoLineItems: MtgoLineItemDto[]) {
     return this.cardService.parseBatch(mtgoLineItems);
   }
 
+  //returns the card with the given scryfallId
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.cardService.findOne(id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCardDto: UpdateCardDto) {
-    return this.cardService.update(+id, updateCardDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cardService.remove(+id);
   }
 }

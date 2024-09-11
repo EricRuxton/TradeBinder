@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
   Post,
@@ -25,7 +24,7 @@ export class TradebinderController {
     return this.tradebinderService.create(createTradebinderDto);
   }
 
-  //Gets the signed-in users collection info
+  //Gets the signed-in users tradebinder info
   @UseGuards(AuthGuard)
   @Get('/info')
   async myTradebinder(@UserInject() user: User) {
@@ -35,7 +34,7 @@ export class TradebinderController {
     return this.tradebinderService.findInfo(tradebinder);
   }
 
-  //Gets the passed users collection info if it is public
+  //Gets the passed users tradebinder info if it is public
   @Get('/info/:username')
   async find(@Param('username') username: string) {
     const tradebinder = await this.tradebinderService.findByUsername(username);
@@ -44,6 +43,7 @@ export class TradebinderController {
     return this.tradebinderService.findInfo(tradebinder);
   }
 
+  //updates the signed-in users tradebinder
   @UseGuards(AuthGuard)
   @Put()
   update(
@@ -51,10 +51,5 @@ export class TradebinderController {
     @Body() updateTradebinderDto: UpdateTradebinderDto,
   ) {
     return this.tradebinderService.update(user.id, updateTradebinderDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tradebinderService.remove(+id);
   }
 }

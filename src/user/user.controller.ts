@@ -9,17 +9,14 @@ import { User } from './entities/user.entity';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
-
+  //returns the signed-in users profile information
   @UseGuards(AuthGuard)
   @Get('profile')
   findOne(@UserInject() user: User) {
     return user;
   }
 
+  //creates new user object, initiates signup email flow
   @Post('signup')
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);

@@ -36,10 +36,28 @@ $ npm run test:cov
 
 ## Resources
 
-## Support
+### Env
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If
-you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+#Version Number
+VER=
+
+#DB Credentials
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_PASS=
+DB_NAME=
+
+#Auth Constants
+JWT_SECRET=
+
+#SMTP
+SMTP_HOST=
+SMTP_PORT=
+SMTP_USER=
+SMTP_PASS=
+```
 
 ## Contact
 
@@ -47,4 +65,4 @@ you'd like to join them, please [read more here](https://docs.nestjs.com/support
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
