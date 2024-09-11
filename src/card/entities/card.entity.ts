@@ -79,41 +79,9 @@ export class Card {
   collectorNumber: string;
 
   @OneToMany(() => CollectionCard, (collectionCard) => collectionCard.card)
-  collectionCards: CollectionCard[];
+  collectionCards?: CollectionCard[];
 
-  constructor(
-    setName,
-    colorIdentity,
-    flatValue,
-    color,
-    name,
-    cardType,
-    cmc,
-    scryfallId,
-    foilValue,
-    cardUri,
-    artUri,
-    setCode,
-    finishes,
-    language,
-    collectorNumber,
-    rarity,
-  ) {
-    this.setName = setName;
-    this.colorIdentity = colorIdentity;
-    this.flatValue = flatValue;
-    this.color = color;
-    this.name = name;
-    this.cardType = cardType;
-    this.cmc = cmc;
-    this.scryfallId = scryfallId;
-    this.foilValue = foilValue;
-    this.cardUri = cardUri;
-    this.artUri = artUri;
-    this.setCode = setCode;
-    this.finishes = finishes;
-    this.language = language;
-    this.collectorNumber = collectorNumber;
-    this.rarity = rarity;
+  constructor(partial?: Partial<Card>) {
+    Object.assign(this as Card, partial);
   }
 }

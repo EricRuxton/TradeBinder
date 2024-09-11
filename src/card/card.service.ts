@@ -23,24 +23,24 @@ export class CardService {
   }
 
   async scryfallCardTransformer(scryfallCardDto: ScryfallCardDto) {
-    return new Card(
-      scryfallCardDto.set_name,
-      scryfallCardDto.color_identity.toString(),
-      scryfallCardDto.prices.usd,
-      scryfallCardDto.colors.toString(),
-      scryfallCardDto.name,
-      scryfallCardDto.type_line,
-      scryfallCardDto.cmc,
-      scryfallCardDto.id,
-      scryfallCardDto.prices.usd_foil,
-      scryfallCardDto.image_uris.small,
-      scryfallCardDto.image_uris.art_crop,
-      scryfallCardDto.set,
-      scryfallCardDto.finishes.toString(),
-      scryfallCardDto.lang,
-      scryfallCardDto.collector_number,
-      scryfallCardDto.rarity,
-    );
+    return new Card({
+      colorIdentity: scryfallCardDto.color_identity.toString(),
+      flatValue: scryfallCardDto.prices.usd,
+      color: scryfallCardDto.colors.toString(),
+      name: scryfallCardDto.name,
+      cardType: scryfallCardDto.type_line,
+      cmc: scryfallCardDto.cmc,
+      scryfallId: scryfallCardDto.id,
+      foilValue: scryfallCardDto.prices.usd_foil,
+      cardUri: scryfallCardDto.image_uris.small,
+      artUri: scryfallCardDto.image_uris.art_crop,
+      setName: scryfallCardDto.set,
+      finishes: scryfallCardDto.finishes.toString(),
+      language: scryfallCardDto.lang,
+      collectorNumber: scryfallCardDto.collector_number,
+      rarity: scryfallCardDto.rarity,
+      setCode: scryfallCardDto.set,
+    } as unknown as Card);
   }
 
   async findAll() {}

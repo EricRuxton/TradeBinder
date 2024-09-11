@@ -11,7 +11,7 @@ import { CardService } from '../card/card.service';
 import { Card } from '../card/entities/card.entity';
 import { ScryfallCardDto } from '../scryfall/dto/scryfall-card.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThanOrEqual, Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository, SelectQueryBuilder } from 'typeorm';
 import { CollectionCard } from './entities/collection_card.entity';
 import { User } from '../user/entities/user.entity';
 import { CollectionService } from '../collection/collection.service';
@@ -65,7 +65,9 @@ export class CollectionCardService {
   }
 
   async create(createCollectionCards: CreateCollection_cardDto[], user: User) {
-    const collection = await this.collectionService.findOne(user.username);
+    const collection = await this.collectionService.findByUsername(
+      user.username,
+    );
     for (const createCollectionCardDto of createCollectionCards) {
       //find card reference with scryfallId in cards
       let card: Card = await this.cardService.findOne(
@@ -99,24 +101,21 @@ export class CollectionCardService {
     }
   }
 
-  async findAll(collectionId, cardFilterDto: CardFilterDto) {
-    const rawCollectionCards: RawCollectionCardDto[] =
-      await this.collectionCardRepository
-        .createQueryBuilder('collection_card')
-        .leftJoinAndSelect('collection_card.card', 'card')
-        .leftJoinAndSelect('collection_card.collection', 'collection')
-        .addSelect(
-          'IF(collection_card.foil = true, card.foilValue, card.flatValue)',
-          'value',
-        )
-        .where('collection.id = :collectionId', {
-          collectionId,
-        })
-        .limit(2)
-        .offset(2)
-        .getRawMany();
+  async findFiltered(collectionId, cardFilterDto?: CardFilterDto) {
+    const rawQuery = await this.collectionCardRepository
+      .createQueryBuilder('collection_card')
+      .leftJoinAndSelect('collection_card.card', 'card')
+      .leftJoinAndSelect('collection_card.collection', 'collection')
+      .addSelect(
+        'IF(collection_card.foil = true, card.foilValue, card.flatValue)',
+        'value',
+      )
+      .where('collection.id = :collectionId', {
+        collectionId,
+      });
 
-    console.log(rawCollectionCards);
+    const rawCollectionCards: RawCollectionCardDto[] =
+      await this.validateFilters(rawQuery, cardFilterDto).getRawMany();
 
     const collectionCards =
       CollectionCardService.transformRawCollectionCards(rawCollectionCards);
@@ -183,13 +182,20 @@ export class CollectionCardService {
     });
   }
 
-  private buildSortOptions(orderBy: string) {
-    const sortOptions = {};
-    const rules = orderBy.split(',');
-    for (const rule of rules) {
-      sortOptions[rule.split(':')[0]] = rule.split(':')[1];
+  private validateFilters(
+    rawQuery: SelectQueryBuilder<CollectionCard>,
+    cardFilterDto: CardFilterDto,
+  ) {
+    if (cardFilterDto) {
+      if (cardFilterDto.name)
+        rawQuery.andWhere('card.name like %:name%', {
+          name: cardFilterDto.name,
+        });
+      if (cardFilterDto.name)
+        rawQuery.andWhere('card.name like %:name%', {
+          name: cardFilterDto.name,
+        });
     }
-    console.log(sortOptions);
-    return sortOptions;
+    return rawQuery;
   }
 }
