@@ -112,7 +112,11 @@ export class CollectionCardService {
         .where('collection.id = :collectionId', {
           collectionId,
         })
+        .limit(2)
+        .offset(2)
         .getRawMany();
+
+    console.log(rawCollectionCards);
 
     const collectionCards =
       CollectionCardService.transformRawCollectionCards(rawCollectionCards);
