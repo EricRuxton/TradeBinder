@@ -16,7 +16,7 @@ import { CollectionCard } from './entities/collection_card.entity';
 import { User } from '../user/entities/user.entity';
 import { CollectionService } from '../collection/collection.service';
 import 'dotenv/config';
-import { delay } from '../utils/utils';
+import { CastSortOrder, delay } from '../utils/utils';
 import { ScryfallService } from '../scryfall/scryfall.service';
 import { CardFilterDto } from './dto/filter-collection_card.dto';
 import { RawCollectionCardDto } from './dto/raw-collection_card.dto';
@@ -114,8 +114,9 @@ export class CollectionCardService {
         collectionId,
       });
 
-    const rawCollectionCards: RawCollectionCardDto[] =
-      await this.validateFilters(rawQuery, cardFilterDto).getRawMany();
+    const rawCollectionCards: RawCollectionCardDto[] = await (
+      await this.validateFilters(rawQuery, cardFilterDto)
+    ).getRawMany();
 
     const collectionCards =
       CollectionCardService.transformRawCollectionCards(rawCollectionCards);
@@ -149,7 +150,7 @@ export class CollectionCardService {
     return await this.collectionCardRepository.delete(id);
   }
 
-  private validateFilters(
+  private async validateFilters(
     rawQuery: SelectQueryBuilder<CollectionCard>,
     cardFilterDto: CardFilterDto,
   ) {
@@ -187,9 +188,25 @@ export class CollectionCardService {
           },
         );
 
+      if (cardFilterDto.orderBy) {
+        const rules = await this.parseOrderRules(cardFilterDto.orderBy);
+        for (const rule of rules) {
+          rawQuery.addOrderBy(`${rule.value}`, CastSortOrder(rule.order));
+        }
+      }
+
       rawQuery.limit(cardFilterDto.take);
       rawQuery.offset((cardFilterDto.page - 1) * cardFilterDto.take);
     }
     return rawQuery;
+  }
+
+  private async parseOrderRules(orderBy: string) {
+    const orderRules = [];
+    const rules = orderBy.split(',');
+    for (const rule of rules) {
+      orderRules.push({ value: rule.split(':')[0], order: rule.split(':')[1] });
+    }
+    return orderRules;
   }
 }

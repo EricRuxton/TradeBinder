@@ -24,3 +24,12 @@ export const buildCardInfoResponse = (collectionCards: CollectionCard[]) => {
     ).length,
   };
 };
+
+export function CastSortOrder(
+  order: string | undefined,
+): 'ASC' | 'DESC' | undefined {
+  if (order === 'ASC' || order === 'DESC') {
+    return order;
+  }
+  return undefined; // Default to undefined if not a valid order
+}
