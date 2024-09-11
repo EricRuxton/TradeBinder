@@ -11,7 +11,7 @@ import { CardService } from '../card/card.service';
 import { Card } from '../card/entities/card.entity';
 import { ScryfallCardDto } from '../scryfall/dto/scryfall-card.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThanOrEqual, Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CollectionCard } from './entities/collection_card.entity';
 import { User } from '../user/entities/user.entity';
 import { CollectionService } from '../collection/collection.service';
@@ -123,10 +123,6 @@ export class CollectionCardService {
     return collectionCards;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} collectionCard`;
-  }
-
   update(id: number, updateCollectionCardDto: UpdateCollection_cardDto) {
     return `This action updates a #${id} collectionCard`;
   }
@@ -153,48 +149,46 @@ export class CollectionCardService {
     return await this.collectionCardRepository.delete(id);
   }
 
-  async findTradeBinderCards(collectionId: number, threshold: number) {
-    return this.collectionCardRepository.find({
-      where: [
-        {
-          tradeable: true,
-          collection: {
-            id: collectionId,
-          },
-          card: {
-            foilValue: MoreThanOrEqual(threshold),
-          },
-        },
-        {
-          tradeable: true,
-          collection: {
-            id: collectionId,
-          },
-          card: {
-            flatValue: MoreThanOrEqual(threshold),
-          },
-        },
-      ],
-      relations: {
-        collection: true,
-        card: true,
-      },
-    });
-  }
-
   private validateFilters(
     rawQuery: SelectQueryBuilder<CollectionCard>,
     cardFilterDto: CardFilterDto,
   ) {
     if (cardFilterDto) {
+      //name filter options
       if (cardFilterDto.name)
-        rawQuery.andWhere('card.name like %:name%', {
-          name: cardFilterDto.name,
+        rawQuery.andWhere('card.name like :name', {
+          name: `%${cardFilterDto.name}%`,
         });
-      if (cardFilterDto.name)
-        rawQuery.andWhere('card.name like %:name%', {
-          name: cardFilterDto.name,
+
+      //color filter options
+      if (cardFilterDto.color)
+        rawQuery.andWhere('card.color like :color', {
+          color: `%${cardFilterDto.color}%`,
         });
+
+      //cmc filter options
+      if (cardFilterDto.color)
+        rawQuery.andWhere('card.color = :cmc', {
+          cmc: cardFilterDto.cmc,
+        });
+
+      //setName filter options
+      if (cardFilterDto.setName)
+        rawQuery.andWhere('card.setName like :setName', {
+          setName: `%${cardFilterDto.setName}%`,
+        });
+
+      //value filter options
+      if (cardFilterDto.value)
+        rawQuery.andWhere(
+          'IF(collection_card.foil = true, card.foilValue, card.flatValue) > :value',
+          {
+            value: cardFilterDto.value,
+          },
+        );
+
+      rawQuery.limit(cardFilterDto.take);
+      rawQuery.offset((cardFilterDto.page - 1) * cardFilterDto.take);
     }
     return rawQuery;
   }

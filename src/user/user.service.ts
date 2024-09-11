@@ -42,8 +42,14 @@ export class UserService {
   }
 
   async findOne(username: string) {
-    return await this.userRepository.findOneByOrFail({
-      username,
+    return await this.userRepository.findOneOrFail({
+      where: {
+        username,
+      },
+      relations: {
+        collection: true,
+        tradebinder: true,
+      },
     });
   }
 

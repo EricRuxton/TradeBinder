@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tradebinder } from './entities/tradebinder.entity';
 import { CollectionCardService } from '../collection_card/collection_card.service';
+import { CardFilterDto } from '../collection_card/dto/filter-collection_card.dto';
 
 @Injectable()
 export class TradebinderService {
@@ -22,7 +23,7 @@ export class TradebinderService {
     return `This action returns all tradebinder`;
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, cardFilterDto: CardFilterDto) {
     const tradebinder = await this.tradebinderRepository.findOne({
       where: {
         user: {
@@ -35,9 +36,9 @@ export class TradebinderService {
         },
       },
     });
-    return await this.collectionCardService.findTradeBinderCards(
+    return await this.collectionCardService.findFiltered(
       tradebinder.user.collection.id,
-      tradebinder.threshold,
+      { ...cardFilterDto, value: tradebinder.threshold },
     );
   }
 

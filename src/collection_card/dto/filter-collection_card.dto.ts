@@ -19,4 +19,7 @@ export class CardFilterDto extends PartialType(Card) {
   foil: string;
   orderBy: string;
   order: ORDER;
+  value: number;
+  take: number;
+  page: number;
 }
