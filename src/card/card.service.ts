@@ -39,6 +39,7 @@ export class CardService {
       scryfallCardDto.finishes.toString(),
       scryfallCardDto.lang,
       scryfallCardDto.collector_number,
+      scryfallCardDto.rarity,
     );
   }
 

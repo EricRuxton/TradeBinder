@@ -8,8 +8,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CollectionCardService } from './collection_card.service';
-import { CreateCollectionCardDto } from './dto/create-collection_card.dto';
-import { UpdateCollectionCardDto } from './dto/update-collection_card.dto';
+import { CreateCollection_cardDto } from './dto/create-collection_card.dto';
+import { UpdateCollection_cardDto } from './dto/update-collection_card.dto';
 import { UserInject } from '../user/userInject';
 import { User } from '../user/entities/user.entity';
 import { AuthGuard } from '../auth/auth.guard';
@@ -24,7 +24,7 @@ export class CollectionCardController {
   @UseGuards(AuthGuard)
   @Post()
   create(
-    @Body() createCollectionCards: CreateCollectionCardDto[],
+    @Body() createCollectionCards: CreateCollection_cardDto[],
     @UserInject() user: User,
   ) {
     return this.collectionCardService.create(createCollectionCards, user);
@@ -33,7 +33,7 @@ export class CollectionCardController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateCollectionCardDto: UpdateCollectionCardDto,
+    @Body() updateCollectionCardDto: UpdateCollection_cardDto,
   ) {
     return this.collectionCardService.update(+id, updateCollectionCardDto);
   }

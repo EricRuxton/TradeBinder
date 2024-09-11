@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { TradebinderService } from './tradebinder.service';
@@ -30,12 +30,13 @@ export class TradebinderController {
     return this.tradebinderService.findOne(user.id);
   }
 
-  @Patch(':id')
+  @UseGuards(AuthGuard)
+  @Put()
   update(
-    @Param('id') id: string,
+    @UserInject() user: User,
     @Body() updateTradebinderDto: UpdateTradebinderDto,
   ) {
-    return this.tradebinderService.update(+id, updateTradebinderDto);
+    return this.tradebinderService.update(user.id, updateTradebinderDto);
   }
 
   @Delete(':id')

@@ -22,6 +22,7 @@ export class Card {
   setCode: string;
 
   @Column('decimal', {
+    nullable: true,
     precision: 10,
     scale: 2,
     transformer: {
@@ -33,7 +34,7 @@ export class Card {
       },
     },
   })
-  flatValue: number;
+  flatValue?: number;
 
   @Column('decimal', {
     nullable: true,
@@ -58,6 +59,9 @@ export class Card {
 
   @Column()
   cmc: number;
+
+  @Column()
+  rarity: string;
 
   @Column()
   cardUri: string;
@@ -93,6 +97,7 @@ export class Card {
     finishes,
     language,
     collectorNumber,
+    rarity,
   ) {
     this.setName = setName;
     this.colorIdentity = colorIdentity;
@@ -109,5 +114,6 @@ export class Card {
     this.finishes = finishes;
     this.language = language;
     this.collectorNumber = collectorNumber;
+    this.rarity = rarity;
   }
 }

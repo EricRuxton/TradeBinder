@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateTradebinderDto } from './create-tradebinder.dto';
+import { IsNotEmpty } from 'class-validator';
 
-export class UpdateTradebinderDto extends PartialType(CreateTradebinderDto) {}
+export class UpdateTradebinderDto {
+  @IsNotEmpty()
+  threshold: number;
+}

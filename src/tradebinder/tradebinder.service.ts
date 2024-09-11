@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateTradebinderDto } from './dto/create-tradebinder.dto';
 import { UpdateTradebinderDto } from './dto/update-tradebinder.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -41,8 +41,23 @@ export class TradebinderService {
     );
   }
 
-  update(id: number, updateTradebinderDto: UpdateTradebinderDto) {
-    return `This action updates a #${id} tradebinder`;
+  async update(id: number, updateTradebinderDto: UpdateTradebinderDto) {
+    const tradebinder = await this.tradebinderRepository.findOne({
+      relations: {
+        user: true,
+      },
+      where: {
+        user: {
+          id,
+        },
+      },
+    });
+    if (!tradebinder)
+      throw new BadRequestException('Could not find tradebinder for user.');
+    return this.tradebinderRepository.save({
+      ...tradebinder,
+      threshold: updateTradebinderDto.threshold,
+    });
   }
 
   remove(id: number) {

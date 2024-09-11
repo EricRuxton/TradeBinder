@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class CreateCollectionCardDto {
+export class CreateCollection_cardDto {
   @IsNotEmpty()
   scryfallId: string;
 

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { CollectionCardService } from './collection_card.service';
 import { CollectionCardController } from './collection_card.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -10,7 +10,7 @@ import { ScryfallModule } from '../scryfall/scryfall.module';
 @Module({
   imports: [
     CardModule,
-    CollectionModule,
+    forwardRef(() => CollectionModule),
     ScryfallModule,
     TypeOrmModule.forFeature([CollectionCard]),
   ],
