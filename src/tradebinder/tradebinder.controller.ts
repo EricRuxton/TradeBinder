@@ -6,7 +6,7 @@ import {
   Param,
   Post,
   Put,
-  Query,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { TradebinderService } from './tradebinder.service';
@@ -15,7 +15,6 @@ import { UpdateTradebinderDto } from './dto/update-tradebinder.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { UserInject } from '../user/userInject';
 import { User } from '../user/entities/user.entity';
-import { CardFilterDto } from '../collection_card/dto/filter-collection_card.dto';
 
 @Controller('tradebinder')
 export class TradebinderController {
@@ -26,10 +25,23 @@ export class TradebinderController {
     return this.tradebinderService.create(createTradebinderDto);
   }
 
+  //Gets the signed-in users collection info
   @UseGuards(AuthGuard)
-  @Get()
-  find(@UserInject() user: User, @Query() cardFilterDto: CardFilterDto) {
-    return this.tradebinderService.findOne(user.id, cardFilterDto);
+  @Get('/info')
+  async myTradebinder(@UserInject() user: User) {
+    const tradebinder = await this.tradebinderService.findByUsername(
+      user.username,
+    );
+    return this.tradebinderService.findInfo(tradebinder);
+  }
+
+  //Gets the passed users collection info if it is public
+  @Get('/info/:username')
+  async find(@Param('username') username: string) {
+    const tradebinder = await this.tradebinderService.findByUsername(username);
+    if (!tradebinder.public)
+      throw new UnauthorizedException('This collection is private');
+    return this.tradebinderService.findInfo(tradebinder);
   }
 
   @UseGuards(AuthGuard)

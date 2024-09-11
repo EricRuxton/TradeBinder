@@ -7,4 +7,5 @@ export class CardFilterDto extends PartialType(Card) {
   value: number;
   take: number;
   page: number;
+  tradeable: boolean;
 }

@@ -179,6 +179,12 @@ export class CollectionCardService {
           setName: `%${cardFilterDto.setName}%`,
         });
 
+      //setName filter options
+      if (cardFilterDto.tradeable)
+        rawQuery.andWhere('tradeable IS :tradeable', {
+          tradeable: cardFilterDto.tradeable,
+        });
+
       //value filter options
       if (cardFilterDto.value)
         rawQuery.andWhere(

@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tradebinder } from './entities/tradebinder.entity';
 import { CollectionCardService } from '../collection_card/collection_card.service';
-import { CardFilterDto } from '../collection_card/dto/filter-collection_card.dto';
+import { buildCardInfoResponse } from '../utils/utils';
 
 @Injectable()
 export class TradebinderService {
@@ -23,11 +23,11 @@ export class TradebinderService {
     return `This action returns all tradebinder`;
   }
 
-  async findOne(id: number, cardFilterDto: CardFilterDto) {
-    const tradebinder = await this.tradebinderRepository.findOne({
+  async findByUsername(username: string) {
+    return this.tradebinderRepository.findOne({
       where: {
         user: {
-          id,
+          username,
         },
       },
       relations: {
@@ -36,10 +36,6 @@ export class TradebinderService {
         },
       },
     });
-    return await this.collectionCardService.findFiltered(
-      tradebinder.user.collection.id,
-      { ...cardFilterDto, value: tradebinder.threshold },
-    );
   }
 
   async update(id: number, updateTradebinderDto: UpdateTradebinderDto) {
@@ -63,5 +59,19 @@ export class TradebinderService {
 
   remove(id: number) {
     return `This action removes a #${id} tradebinder`;
+  }
+
+  async findInfo(tradebinder: Tradebinder) {
+    const collectionCards = await this.collectionCardService.findFiltered(
+      tradebinder.user.collection.id,
+    );
+    return {
+      tradebinder,
+      ...buildCardInfoResponse(
+        collectionCards.filter(
+          (cc) => cc.value > tradebinder.threshold && cc.tradeable,
+        ),
+      ),
+    };
   }
 }

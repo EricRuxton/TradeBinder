@@ -16,12 +16,14 @@ import { User } from '../user/entities/user.entity';
 import { AuthGuard } from '../auth/auth.guard';
 import { CardFilterDto } from './dto/filter-collection_card.dto';
 import { CollectionService } from '../collection/collection.service';
+import { TradebinderService } from '../tradebinder/tradebinder.service';
 
 @Controller('collection_card')
 export class CollectionCardController {
   constructor(
     private readonly collectionCardService: CollectionCardService,
     private readonly collectionService: CollectionService,
+    private readonly tradebinderService: TradebinderService,
   ) {}
 
   //adds a card to a users collection by its scryfallId
@@ -37,8 +39,11 @@ export class CollectionCardController {
   }
 
   @UseGuards(AuthGuard)
-  @Get('cards')
-  getProfile(@UserInject() user: User, @Query() cardFilterDto: CardFilterDto) {
+  @Get('collection')
+  getAuthCollection(
+    @UserInject() user: User,
+    @Query() cardFilterDto: CardFilterDto,
+  ) {
     return this.collectionCardService.findFiltered(user.collection.id, {
       ...cardFilterDto,
       take: cardFilterDto.take
@@ -50,8 +55,8 @@ export class CollectionCardController {
     });
   }
 
-  @Get('cards/:username')
-  async update(
+  @Get('collection/:username')
+  async getCollection(
     @Param('username') username: string,
     @Query() cardFilterDto: CardFilterDto,
   ) {
@@ -60,6 +65,49 @@ export class CollectionCardController {
       throw new UnauthorizedException('Collection is private.');
     return this.collectionCardService.findFiltered(collection.id, {
       ...cardFilterDto,
+      take: cardFilterDto.take
+        ? +cardFilterDto.take > 100
+          ? 100
+          : +cardFilterDto.take
+        : 25,
+      page: cardFilterDto.page ?? 1,
+    });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('tradebinder/:username')
+  async getAuthTradebinder(
+    @UserInject() user: User,
+    @Query() cardFilterDto: CardFilterDto,
+  ) {
+    return this.collectionCardService.findFiltered(user.collection.id, {
+      ...cardFilterDto,
+      value: user.tradebinder.threshold,
+      tradeable: true,
+      take: cardFilterDto.take
+        ? +cardFilterDto.take > 100
+          ? 100
+          : +cardFilterDto.take
+        : 25,
+      page: cardFilterDto.page ?? 1,
+    });
+  }
+
+  @Get('tradebinder/:username')
+  async getTradebinder(
+    @Param('username') username: string,
+    @Query() cardFilterDto: CardFilterDto,
+  ) {
+    const tradebinder = await this.tradebinderService.findByUsername(username);
+    const collection = await this.collectionService.findByUsername(username);
+
+    if (!tradebinder.public)
+      throw new UnauthorizedException('This tradebinder is private.');
+
+    return this.collectionCardService.findFiltered(collection.id, {
+      ...cardFilterDto,
+      value: tradebinder.threshold,
+      tradeable: true,
       take: cardFilterDto.take
         ? +cardFilterDto.take > 100
           ? 100

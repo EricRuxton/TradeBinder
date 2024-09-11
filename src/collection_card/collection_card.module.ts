@@ -6,11 +6,13 @@ import { CollectionCard } from './entities/collection_card.entity';
 import { CardModule } from '../card/card.module';
 import { CollectionModule } from '../collection/collection.module';
 import { ScryfallModule } from '../scryfall/scryfall.module';
+import { TradebinderModule } from '../tradebinder/tradebinder.module';
 
 @Module({
   imports: [
     CardModule,
     forwardRef(() => CollectionModule),
+    forwardRef(() => TradebinderModule),
     ScryfallModule,
     TypeOrmModule.forFeature([CollectionCard]),
   ],
